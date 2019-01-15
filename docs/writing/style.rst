@@ -1,9 +1,11 @@
 .. _code_style:
 
-Code Style
-==========
 
-.. image:: https://farm5.staticflickr.com/4223/33907150054_5ee79e8940_k_d.jpg
+##########
+Code Style
+##########
+
+.. image:: /_static/photos/33907150054_5ee79e8940_k_d.jpg
 
 If you ask Python programmers what they like most about Python, they will
 often cite its high readability.  Indeed, a high level of readability
@@ -21,8 +23,10 @@ what is considered the best (hear: most readable) way.
 On some border cases, no best way has been agreed upon on how to express
 an intent in Python code, but these cases are rare.
 
+
+****************
 General concepts
-----------------
+****************
 
 Explicit code
 ~~~~~~~~~~~~~
@@ -111,7 +115,7 @@ compared to the more straightforward calls to ``send('Hello', 'World')`` and
    optional, and evaluate to ``None`` when they are not passed another value.
 
 Calling a function with keyword arguments can be done in multiple ways in
-Python, for example it is possible to follow the order of arguments in the
+Python; for example, it is possible to follow the order of arguments in the
 definition without explicitly naming the arguments, like in
 ``send('Hello', 'World', 'Cthulhu', 'God')``, sending a blind carbon copy to
 God. It would also be possible to name arguments in another order, like in
@@ -120,7 +124,7 @@ possibilities are better avoided without any strong reason to not follow the
 syntax that is the closest to the function definition:
 ``send('Hello', 'World', cc='Cthulhu', bcc='God')``.
 
-As a side note, following `YAGNI <http://en.wikipedia.org/wiki/You_ain't_gonna_need_it>`_
+As a side note, following the `YAGNI <http://en.wikipedia.org/wiki/You_ain't_gonna_need_it>`_
 principle, it is often harder to remove an optional argument (and its logic
 inside the function) that was added "just in case" and is seemingly never used,
 than to add a new optional argument and its logic when needed.
@@ -130,7 +134,7 @@ than to add a new optional argument and its logic when needed.
    an extensible number of positional arguments, it can be defined with the
    ``*args`` constructs. In the function body, ``args`` will be a tuple of all
    the remaining positional arguments. For example, ``send(message, *args)``
-   can be called with each recipient as an argument:``send('Hello', 'God',
+   can be called with each recipient as an argument: ``send('Hello', 'God',
    'Mom', 'Cthulhu')``, and in the function body ``args`` will be equal to
    ``('God', 'Mom', 'Cthulhu')``.
 
@@ -177,7 +181,7 @@ possible to do each of the following:
 
 * change how the Python interpreter imports modules
 
-* it is even possible (and recommended if needed) to embed C routines in Python.
+* It is even possible (and recommended if needed) to embed C routines in Python.
 
 However, all these options have many drawbacks and it is always better to use
 the most straightforward way to achieve your goal. The main drawback is that
@@ -204,7 +208,7 @@ are all responsible users".
 
 This doesn't mean that, for example, no properties are considered private, and
 that no proper encapsulation is possible in Python. Rather, instead of relying
-on concrete walls erected by the developers between their code and other's, the
+on concrete walls erected by the developers between their code and others', the
 Python community prefers to rely on a set of conventions indicating that these
 elements should not be accessed directly.
 
@@ -260,8 +264,10 @@ is needed.
        return x  # One single exit point for the returned value x will help
                  # when maintaining the code.
 
+
+******
 Idioms
-------
+******
 
 A programming idiom, put simply, is a *way* to write code. The notion of
 programming idioms is discussed amply at `c2 <http://c2.com/cgi/wiki?ProgrammingIdiom>`_
@@ -353,7 +359,7 @@ Instead, use a list comprehension:
 
     four_lists = [[] for __ in xrange(4)]
 
-Note: Use range() instead of xrange() in Python 3
+Note: Use range() instead of xrange() in Python 3.
 
 Create a string from a list
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -417,8 +423,9 @@ hashtable will often be greater than the time saved by the improved search
 speed.
 
 
+*************
 Zen of Python
--------------
+*************
 
 Also known as :pep:`20`, the guiding principles for Python's design.
 
@@ -450,10 +457,12 @@ Also known as :pep:`20`, the guiding principles for Python's design.
 For some examples of good Python style, see `these slides from a Python user
 group <http://artifex.org/~hblanks/talks/2011/pep20_by_example.pdf>`_.
 
-PEP 8
------
 
-:pep:`8` is the de-facto code style guide for Python. A high quality,
+*****
+PEP 8
+*****
+
+:pep:`8` is the de facto code style guide for Python. A high quality,
 easy-to-read version of PEP 8 is also available at `pep8.org <http://pep8.org/>`_.
 
 This is highly recommended reading. The entire Python community does their
@@ -504,15 +513,17 @@ Excluding the ``--in-place`` flag will cause the program to output the modified
 code directly to the console for review. The ``--aggressive`` flag will perform
 more substantial changes and can be applied multiple times for greater effect.
 
+
+***********
 Conventions
-----------------
+***********
 
 Here are some conventions you should follow to make your code easier to read.
 
-Check if variable equals a constant
+Check if a variable equals a constant
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You don't need to explicitly compare a value to True, or None, or 0 - you can
+You don't need to explicitly compare a value to True, or None, or 0 -- you can
 just add it to the if statement. See `Truth Value Testing
 <http://docs.python.org/library/stdtypes.html#truth-value-testing>`_ for a
 list of what is considered false.
@@ -581,43 +592,124 @@ provide a powerful, concise way to work with lists. Also, the :py:func:`map` and
 :py:func:`filter` functions can perform operations on lists using a different,
 more concise syntax.
 
+Filtering a list
+~~~~~~~~~~~~~~~~
+
 **Bad**:
+
+Never remove items from a list while you are iterating through it.
 
 .. code-block:: python
 
     # Filter elements greater than 4
     a = [3, 4, 5]
-    b = []
     for i in a:
         if i > 4:
-            b.append(i)
+            a.remove(i)
 
-**Good**:
+Don't make multiple passes through the list.
 
 .. code-block:: python
 
-    a = [3, 4, 5]
-    b = [i for i in a if i > 4]
-    # Or:
-    b = filter(lambda x: x > 4, a)
+    while i in a:
+        a.remove(i)
 
+**Good**:
+
+Python has a few standard ways of filtering lists.
+The approach you use depends on:
+
+* Python 2.x vs. 3.x
+* Lists vs. iterators
+* Possible side effects of modifying the original list
+
+Python 2.x vs. 3.x
+::::::::::::::::::
+
+Starting with Python 3.0, the :py:func:`filter` function returns an iterator instead of a list.
+Wrap it in :py:func:`list` if you truly need a list.
+
+.. code-block:: python
+
+    list(filter(...))
+
+List comprehensions and generator expressions work the same in both 2.x and 3.x (except that comprehensions in 2.x "leak" variables into the enclosing namespace):
+
+    * Comprehensions create a new list object.
+    * Generators iterate over the original list.
+
+The :py:func:`filter` function:
+
+    * in 2.x returns a list (use itertools.ifilter if you want an iterator)
+    * in 3.x returns an iterator
+
+Lists vs. iterators
+:::::::::::::::::::
+
+Creating a new list requires more work and uses more memory. If you a just going to loop through the new list, consider using an iterator instead.
+
+.. code-block:: python
+
+    # comprehensions create a new list object
+    filtered_values = [value for value in sequence if value != x]
+    # Or (2.x)
+    filtered_values = filter(lambda i: i != x, sequence)
+
+    # generators don't create another list
+    filtered_values = (value for value in sequence if value != x)
+    # Or (3.x)
+    filtered_values = filter(lambda i: i != x, sequence)
+    # Or (2.x)
+    filtered_values = itertools.ifilter(lambda i: i != x, sequence)
+
+
+
+Possible side effects of modifying the original list
+::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+Modifying the original list can be risky if there are other variables referencing it. But you can use *slice assignment* if you really want to do that.
+
+.. code-block:: python
+
+    # replace the contents of the original list
+    sequence[::] = [value for value in sequence if value != x]
+    # Or
+    sequence[::] = (value for value in sequence if value != x)
+    # Or
+    sequence[::] = filter(lambda value: value != x, sequence)
+
+
+Modifying the values in a list
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 **Bad**:
+
+Remember that assignment never creates a new object. If two or more variables refer to the same list, changing one of them changes them all.
 
 .. code-block:: python
 
     # Add three to all list members.
     a = [3, 4, 5]
+    b = a                     # a and b refer to the same list object
+
     for i in range(len(a)):
-        a[i] += 3
+        a[i] += 3             # b[i] also changes
 
 **Good**:
+
+It's safer to create a new list object and leave the original alone.
 
 .. code-block:: python
 
     a = [3, 4, 5]
+    b = a
+
+    # assign the variable "a" to a new list without changing "b"
     a = [i + 3 for i in a]
-    # Or:
+    # Or (Python 2.x):
     a = map(lambda i: i + 3, a)
+    # Or (Python 3.x)
+    a = list(map(lambda i: i + 3, a))
+
 
 Use :py:func:`enumerate` keep a count of your place in the list.
 
